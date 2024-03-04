@@ -7,5 +7,5 @@ export default defineEventHandler(async (event) => {
     })
 
     let serverListJson = await serverList.json()    
-    return serverListJson
+    return serverListJson['images']
 })

@@ -88,6 +88,23 @@
         fetchServer()
     }
 
+    const toSnapshot = async () => {
+        alert('Creando snapshot')
+        const response = await fetch('/api/server/'+ serverId +'/saveAndDelete?name='+ server.name, {
+            method: 'GET',
+            headers: { 'Authorization': `${authToken.value}`}
+        })
+
+        if (response.status != 200) {
+            alert(response.statusText)
+            return
+        } else {
+            alert("Server eliminado :)")
+            // Redirect /
+            window.location.href = '/'
+        }
+    }
+
     fetchServer()
     fetchLastActions()
 </script>
@@ -126,6 +143,7 @@
                         <button @click="powerOn()" class="bg-slate-600 rounded-lg p-2">Encender</button>
                         <button @click="powerOff()" class="bg-slate-600 rounded-lg p-2">Apagar</button>
                         <button @click="escalateServer()" class="bg-slate-600 rounded-lg p-2">Escalar</button>
+                        <button @click="toSnapshot()" class="bg-slate-600 rounded-lg p-2">🧊</button>
                     </div>
                 </div>
             </div>
