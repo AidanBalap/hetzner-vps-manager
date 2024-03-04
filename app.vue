@@ -12,8 +12,8 @@ import { NuxtPage } from '#build/components';
 </script>
 
 <template>
-  <div class="bg-slate-500 h-[100vh]">
-    <div class="max-w-5xl mx-auto">
+  <div class="bg-[#161618]">
+    <div class="min-h-[100vh] max-w-6xl mx-auto px-4">
       <Navbar />
       <NuxtPage />
       <Footer />

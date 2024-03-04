@@ -57,51 +57,41 @@
 </script>
 
 <template>
-    <div class="flex flex-col mx-auto  m-8 bg-slate-700 rounded-lg justify-center align-middle">
-        <h3 class="text-4xl text-bold pt-4 text-center">Servidores <span>🚀</span></h3>
+    <div class="flex flex-col gap-y-20 py-12">
+        <div>
+            <h3 class="text-3xl font-bold pb-4 text-white">🚀 Servidores activos :</h3>
+        
+            <div class="flex flex-col gap-y-4 text-white">
+                <div class="flex justify-center align-middle border-b-2 py-2">
+                    <p class="text-center w-[8%]">Estado</p>
+                    <p class="text-center w-[23%]">Nombre</p>
+                    <p class="text-center w-[19%]">IP</p>
+                    <p class="text-center w-[9%]">Type</p>
+                    <p class="text-center w-[9%]">Cores</p>
+                    <p class="text-center w-[9%]">RAM</p>
+                    <p class="text-center w-[9%]">€/mes</p>
+                    <p class="text-center w-[16%]">Creación</p>
+                </div>
 
-        <div class="flex flex-col py-4 gap-y-4">
-            <a v-for="server in servers" :key="server.id" v-bind:href="'server/'+ server.id" class="flex flex-row justify-between p-4 bg-slate-500 rounded-lg mx-4">
-                <div class="flex align-middle">
-                    <span class="flex justify-center px-4">{{ server.status == 'running' ? '🟢' : '🔴' }}</span>
-                    <h4 class="text-xl text-bold">{{ server.name }} - <span class="text-sm">{{ server.ipv4 }}</span></h4>
-                </div>
-                <div class="flex gap-x-2">
-                    <p class="text-md">{{ server.type }}</p>
-                    <span>|</span>
-                    <div class="flex gap-x-2">
-                        <p class="text-md">{{ server.specs.cores }} nucleos</p>
-                        <p class="text-md">{{ server.specs.memory }} GB RAM</p>
-                    </div>
-                    <span>|</span>
-                    <p class="text-md">{{ Math.round(server.price.monthly * 100) / 100 }}€ /mes</p>
-                    <span>|</span>
-                    <p class="text-md">{{ server.created }}</p>
-                </div>
-            </a>
+                <server-item v-for="server in servers" :key="server.id" :server="server" />
+            </div>
         </div>
-    </div>
 
-    <div class="flex flex-col mx-auto  m-8 bg-slate-700 rounded-lg justify-center align-middle">
-        <h3 class="text-4xl text-bold pt-4 text-center">Servidores no activos <span>🧊</span></h3>
-
-        <div class="flex flex-col py-4 gap-y-4">
-            <a v-for="snapshot in snapshots" :key="snapshot.id" class="flex flex-row justify-between p-4 bg-slate-500 rounded-lg mx-4">
-                <div class="flex align-middle">
-                    <span class="flex justify-center px-4">{{ snapshot.status == 'available' ? '🟢' : '🔴' }}</span>
-                    <h4 class="text-xl text-bold">{{ snapshot.description }}</h4>
+        <div>
+            <h3 class="text-3xl font-bold pb-4 text-white">🧊 Servidores en frio :</h3>
+        
+            <div class="flex flex-col gap-y-4 text-white">
+                <div class="flex justify-center align-middle border-b-2 py-2">
+                    <p class="text-center w-[8%]">Estado</p>
+                    <p class="text-center w-[30%]">Nombre</p>
+                    <p class="text-center w-[16%]">Precio</p>
+                    <p class="text-center w-[16%]">Capacidad</p>
+                    <p class="text-center w-[20%]">Creación</p>
+                    <p class="text-center w-[10%]">Acción</p>
                 </div>
 
-                <button @click="launchServer(snapshot.id)" class="bg-slate-600 rounded-lg px-2">Cargar</button>
-
-                <div class="flex gap-x-2"> 
-                    <p>{{ Math.round((snapshot.image_size * 0.011) * 100) / 100 }}€/mes</p>
-                    <span>|</span>
-                    <p class="text-md">{{ Math.round(snapshot.image_size * 100) / 100 }}GB de {{ snapshot.disk_size }}GB</p>
-                    <span>|</span>
-                    <p class="text-md">{{ snapshot.created }}</p>
-                </div>
-            </a>
+                <snapshot-item v-for="snapshot in snapshots" :key="snapshot.id" :snapshot="snapshot" />
+            </div>
         </div>
     </div>
 </template>
