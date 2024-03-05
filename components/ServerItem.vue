@@ -10,7 +10,10 @@
         case 'off':
             statusColor.value = 'bg-red-500'
             break
-        case 'deploying':
+        case 'initializing':
+            statusColor.value = 'bg-blue-500'
+            break
+        case 'migrating':
             statusColor.value = 'bg-yellow-500'
             break
         default:

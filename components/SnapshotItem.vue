@@ -1,20 +1,32 @@
 <script setup lang="ts">
+    const authToken = useCookie('auth')
     const props = defineProps(['snapshot'])
     const timestamp = new Date(props.snapshot.created)
     const statusColor = ref('')
     
     switch (props.snapshot.status) {
-        case 'running':
+        case 'available':
             statusColor.value = 'bg-green-500'
             break
-        case 'off':
-            statusColor.value = 'bg-red-500'
-            break
-        case 'deploying':
+        case 'creating':
             statusColor.value = 'bg-yellow-500'
             break
         default:
             statusColor.value = 'bg-gray-500'
+    }
+
+    const deploySnapshot = async () => {
+        const response = await fetch('/api/snapshots/' + props.snapshot.id + '/deploy?name='+ props.snapshot.description, {
+            method: 'POST',
+            headers: { 'Authorization': `${authToken.value}` }
+        })
+
+        if (response.status != 200) {
+            alert('Error al lanzar el servidor')
+            return
+        }
+
+        window.location.reload()
     }
 </script>
 
@@ -28,7 +40,7 @@
         <p class="text-center w-[16%]">{{ Math.round(snapshot.image_size * 100) / 100 }}GB de {{ snapshot.disk_size }}GB</p>
         <p class="text-center w-[20%]">{{ dateToTimeAgo(timestamp) }}</p>
         <div class="flex justify-center text-center w-[10%]">
-            <button class="bg-[#202020] px-1 rounded-lg hover:scale-110">Cargar</button>
+            <button @click="deploySnapshot()" class="bg-[#202020] px-1 rounded-lg hover:scale-110">Cargar</button>
         </div>
     </div>
 </template>
