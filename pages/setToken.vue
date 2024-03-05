@@ -29,12 +29,12 @@
 </script>
 
 <template>
-    <div class="flex flex-col mx-auto h-64 w-96 m-8 bg-slate-700 rounded-lg justify-center align-middle">
-        <h3 class="text-4xl text-bold pt-4 text-center">Contraseña <span>😐</span></h3>
+    <div class="flex flex-col mx-auto h-64 w-96 m-8 bg-secondary rounded-lg justify-center align-middle">
+        <h3 class="text-4xl font-bold pt-4 text-center">Contraseña <span>😐</span></h3>
 
         <form class="flex py-4" @submit="onSubmit">
-            <input type="password" class="w-3/4 m-4 p-2 rounded-lg" v-model="password" placeholder="Contraseña" />
-            <button class="w-1/4 m-4 p-2 bg-slate-500 rounded-lg" @click="">Establecer</button>
+            <input type="password" class="text-black w-3/4 m-4 p-2 rounded-lg" v-model="password" placeholder="Contraseña" />
+            <button class="w-1/4 m-4 p-2 bg-primary/80 rounded-lg" @click="">Establecer</button>
         </form>
     </div>
 </template>

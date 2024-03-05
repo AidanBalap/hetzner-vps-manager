@@ -1,5 +1,5 @@
 <template>
-    <footer class="flex px-2 py-4 justify-between align-middle text-white border-t-2">
+    <footer class="flex px-2 py-4 justify-between align-middle border-t-2">
         <p>&copy; Gambusino - 2024</p>
 
         <div>

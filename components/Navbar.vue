@@ -1,12 +1,12 @@
 <template>
-    <header class="flex justify-between px-2 py-4 pt-8 border-b-2 text-white">
+    <header class="flex justify-between px-2 py-4 pt-8 border-b-2">
         <h2>
-            <a href="/" class="text-4xl font-bold">Gambuso Servers</a>
+            <router-link to="/" class="text-4xl font-bold">Gambuso Servers</router-link>
         </h2>
 
         <div class="flex gap-x-4">
-            <a href="/" class="bg-[#383838] px-4 py-2 rounded-xl hover:scale-105">Servers</a>
-            <a href="/logout" class="bg-[#383838] px-4 py-2 rounded-xl hover:scale-105">Logout</a>
+            <router-link to="/" class="bg-[#383838] px-4 py-2 rounded-xl hover:scale-105">Servers</router-link>
+            <router-link to="/logout" class="bg-[#383838] px-4 py-2 rounded-xl hover:scale-105">Logout</router-link>
         </div>
     </header>
 </template>

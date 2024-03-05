@@ -16,10 +16,12 @@
         default:
             statusColor.value = 'bg-gray-500'
     }
+
+    const pathToServer = '/server/' + props.server.id
 </script>
 
 <template>
-    <a v-bind:href="'/server/'+ props.server.id" class="flex bg-[#383838] hover:bg-[#454545] hover:scale-105 rounded-xl py-4">
+    <router-link :to="'/server/'+ props.server.id" class="flex bg-secondary hover:bg-[#454545] hover:scale-105 rounded-xl py-4">
         <p class="flex w-[8%] justify-center align-middle">
             <span class="block size-6 rounded-full" :class="statusColor"></span>
         </p>
@@ -30,5 +32,5 @@
         <p class="text-center w-[9%]">{{ props.server.specs.memory }}GB</p>
         <p class="text-center w-[9%]">{{ Math.round(props.server.price.monthly * 100) / 100 }}€</p>
         <p class="text-center w-[16%]">{{ dateToTimeAgo(timestamp) }}</p>
-    </a>
+    </router-link>
 </template>

@@ -19,7 +19,7 @@
 </script>
 
 <template>
-    <div class="flex bg-[#383838] rounded-xl py-4">
+    <div class="flex bg-secondary rounded-xl py-4">
         <p class="flex w-[8%] justify-center align-middle">
             <span class="block size-6 rounded-full" :class="statusColor"></span>
         </p>

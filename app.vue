@@ -12,7 +12,7 @@ import { NuxtPage } from '#build/components';
 </script>
 
 <template>
-  <div class="bg-[#161618]">
+  <div class="bg-primary text-white">
     <div class="min-h-[100vh] max-w-6xl mx-auto px-4">
       <Navbar />
       <NuxtPage />

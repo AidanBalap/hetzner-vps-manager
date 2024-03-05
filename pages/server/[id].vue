@@ -111,10 +111,10 @@
 
 <template>
     <div class="flex flex-col mx-auto m-8 rounded-lg justify-center align-middle">
-        <h3 class="text-4xl text-white font-bold pt-4 text-center">Servidor {{ server.name }} <span>🚀</span></h3>
+        <h3 class="text-4xl font-bold pt-4 text-center">Servidor {{ server.name }} <span>🚀</span></h3>
 
         <div v-if="server.status" class="flex flex-col pt-4">
-            <div class="flex flex-col gap-y-4 text-white mx-10 border-b-2 pb-4">
+            <div class="flex flex-col gap-y-4 mx-10 border-b-2 pb-4">
                 <div class="flex justify-center align-middle border-b-2 py-2">
                     <p class="text-center w-[8%]">Estado</p>
                     <p class="text-center w-[23%]">Nombre</p>
@@ -132,42 +132,43 @@
 
         <div v-if="server.status" class="grid grid-cols-3 grid-rows-1 m-10 gap-x-8">
             <div class="col-span-1 pr-6 border-r-2">
-                <h3 class="text-4xl text-white font-bold">⚡ Acciones</h3>
+                <h3 class="text-4xl font-bold">⚡ Acciones</h3>
 
                 <div class="flex flex-col py-4 gap-y-4">
-                    <button @click="powerOn()" class="bg-slate-600 rounded-lg p-2">Encender</button>
-                    <button @click="powerOff()" class="bg-slate-600 rounded-lg p-2">Apagar</button>
-                    <button @click="escalateServer()" class="bg-slate-600 rounded-lg p-2">Escalar</button>
-                    <button @click="toSnapshot()" class="bg-slate-600 rounded-lg p-2">🧊</button>
+                    <button @click="powerOn()" class="bg-secondary/80 rounded-lg p-2 hover:scale-105 hover:underline">Encender</button>
+                    <button @click="powerOff()" class="bg-secondary/80 rounded-lg p-2 hover:scale-105 hover:underline">Apagar</button>
+                    <button @click="escalateServer()" class="bg-secondary/80 rounded-lg p-2 hover:scale-105 hover:underline">Escalar</button>
+                    <button @click="toSnapshot()" class="bg-secondary/80 rounded-lg p-2 hover:scale-105 hover:underline">🧊</button>
                 </div>
             </div>
 
             <div class="col-span-2">
-                <h3 class="text-4xl text-white font-bold pb-4">🧾 Ultimas acciones</h3>
+                <h3 class="text-4xl font-bold pb-4">🧾 Ultimas acciones</h3>
 
-                <table class="text-white">
-                    <thead>
-                        <tr>
-                            <th class="w-[25%]">Comando</th>
-                            <th class="w-[15%]">Estado</th>
-                            <th class="w-[10%]">Progreso</th>
-                            <th class="w-[25%]">Inicio</th>
-                            <th class="w-[25%]">Fin</th>
-                        </tr>
-                    </thead>
+                <div class="max-h-[400px] overflow-y-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="w-[25%]">Comando</th>
+                                <th class="w-[15%]">Estado</th>
+                                <th class="w-[10%]">Progreso</th>
+                                <th class="w-[25%]">Inicio</th>
+                                <th class="w-[25%]">Fin</th>
+                            </tr>
+                        </thead>
 
-                    <tbody>
-                        <tr v-for="action in actions" :key="action.id">
-                            <td class="text-center text-white/70">{{ action.command }}</td>
-                            <td class="text-center text-white/70">{{ action.status }}</td>
-                            <td class="text-center text-white/70">{{ action.progress }}</td>
-                            <td class="text-center text-white/70">{{ new Date(action.started).toLocaleString('es') }}</td>
-                            <td class="text-center text-white/70" v-if="action.finished">{{ dateToTimeAgo(new Date(action.finished)) }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                        <tbody>
+                            <tr v-for="action in actions" :key="action.id">
+                                <td class="text-center text-white/70">{{ action.command }}</td>
+                                <td class="text-center text-white/70">{{ action.status }}</td>
+                                <td class="text-center text-white/70">{{ action.progress }}</td>
+                                <td class="text-center text-white/70">{{ new Date(action.started).toLocaleString('es') }}</td>
+                                <td class="text-center text-white/70" v-if="action.finished">{{ dateToTimeAgo(new Date(action.finished)) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            
         </div>
     </div>
 </template>
