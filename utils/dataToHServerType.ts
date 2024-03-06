@@ -1,11 +1,23 @@
 
 
-export default function (server: any): HServer {
+export default function (server: HSServer): HServer {  
+    
+    if (server.public_net && server.public_net.ipv4 === null) {
+        if (server.public_net.ipv6) {
+            server.public_net.ipv4 = server.public_net.ipv6
+        } else {
+            server.public_net.ipv4 = {
+                id: 0,
+                ip: 'None'
+            }
+        }
+    }
+
     return {
         id: server.id,
         name: server.name,
         status: server.status,
-        ipv4: server.public_net.ipv4.ip,
+        ipv4: server.public_net.ipv4.ip || server.public_net.ipv6.ip,
         type: server.server_type.name,
         specs: {
             cores: server.server_type.cores,

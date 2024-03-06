@@ -19,12 +19,10 @@
         default:
             statusColor.value = 'bg-gray-500'
     }
-
-    const pathToServer = '/server/' + props.server.id
 </script>
 
 <template>
-    <router-link :to="'/server/'+ props.server.id" class="flex bg-secondary hover:bg-[#454545] hover:scale-105 rounded-xl py-4">
+    <router-link :to="'/servers/'+ props.server.id" class="flex bg-secondary hover:bg-[#454545] hover:scale-105 rounded-xl py-4">
         <p class="flex w-[8%] justify-center align-middle">
             <span class="block size-6 rounded-full" :class="statusColor"></span>
         </p>

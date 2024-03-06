@@ -1,6 +1,3 @@
-
-import { NuxtPage } from '#build/components';
-
 <script setup>
   useHead({
     title: 'Hetzner Scaler by Gambus',

@@ -10,7 +10,7 @@
     const snapshots = ref([])
 
     const fetchServers = async () => {
-        const response = await fetch('/api/server', {
+        const response = await fetch('/api/servers', {
             method: 'GET',
             headers: { 'Authorization': `${authToken.value}` }
         })

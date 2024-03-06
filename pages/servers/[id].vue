@@ -11,7 +11,7 @@
     const server = ref({})
     const actions = ref({})
     const fetchServer = async () => {
-        const response = await fetch('/api/server/' + serverId, {
+        const response = await fetch('/api/servers/' + serverId, {
             method: 'GET',
             headers: { 'Authorization': `${authToken.value}` }
         })
@@ -25,7 +25,7 @@
     }
 
     const fetchLastActions = async () => {
-        const response = await fetch('/api/server/' + serverId + '/actions', {
+        const response = await fetch('/api/servers/' + serverId + '/actions', {
             method: 'GET',
             headers: { 'Authorization': `${authToken.value}` }
         })
@@ -45,7 +45,7 @@
     }
 
     const powerOn = async () => {
-        const response = await fetch('/api/server/' + serverId + '/start', {
+        const response = await fetch('/api/servers/' + serverId + '/start', {
             method: 'POST',
             headers: { 'Authorization': `${authToken.value}` }
         })
@@ -62,7 +62,7 @@
     const powerOff = async () => {
         alert('Apagando servidor')
         
-        const response = await fetch('/api/server/' + serverId + '/stop', {
+        const response = await fetch('/api/servers/' + serverId + '/stop', {
             method: 'POST',
             headers: { 'Authorization': `${authToken.value}` }
         })
@@ -78,7 +78,7 @@
 
     const escalateServer = async () => {
         alert  ('Escalando servidor')
-        const response = await fetch('/api/server/' + serverId + '/scale', {
+        const response = await fetch('/api/servers/' + serverId + '/scale', {
             method: 'POST',
             headers: { 'Authorization': `${authToken.value}` }
         })
@@ -96,7 +96,7 @@
 
     const toSnapshot = async () => {
         alert('Creando snapshot')
-        const response = await fetch('/api/server/'+ serverId +'/saveAndDelete?name='+ server.value.name, {
+        const response = await fetch('/api/servers/'+ serverId +'/saveAndDelete?name='+ server.value.name, {
             method: 'GET',
             headers: { 'Authorization': `${authToken.value}`}
         })
