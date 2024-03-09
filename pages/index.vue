@@ -1,4 +1,5 @@
 <script setup>
+    const { $toast } = useNuxtApp();
     const authToken = useCookie('auth')
     
     if (!authToken.value) {
@@ -7,7 +8,6 @@
     }
 
     // Fetch servers
-    const { $toast } = useNuxtApp();
     const servers = ref([])
     const snapshots = ref([])
 

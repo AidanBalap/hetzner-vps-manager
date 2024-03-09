@@ -1,4 +1,6 @@
 <script setup>
+    const { $toast } = useNuxtApp()
+
     const route = useRoute()
     const serverId = route.params.id
 
@@ -9,7 +11,6 @@
         await navigateTo('/setToken')
     }
 
-    const { $toast } = useNuxtApp()
     const server = ref({})
     const actions = ref({})
 
