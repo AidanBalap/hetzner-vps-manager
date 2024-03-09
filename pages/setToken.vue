@@ -2,7 +2,10 @@
     const password = ref('')
     const authToken = useCookie('auth')
 
+    const { $toast } = useNuxtApp()
+
     if (authToken.value) {
+        $toast.info('Ya tienes una contraseña establecida')
         await navigateTo('/')
     }
 
@@ -18,11 +21,12 @@
         })
 
         if (validResponse.status != 200) {
-            alert('Contraseña incorrecta')
+            $toast.error('Contraseña incorrecta')
             return
         }
 
         authToken.value = password.value
+        $toast.success('Contraseña establecida correctamente')
         await navigateTo('/')
     }
 
