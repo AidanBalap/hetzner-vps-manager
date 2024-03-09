@@ -3,7 +3,7 @@ export default defineEventHandler(async (event) => {
     if (!event.path.startsWith('/api')) return;
     if (event.path.startsWith('/api/auth')) return;
 
-    const authHeader = getCookie(event, 'auth');
+    const authHeader = getRequestHeader(event, 'Authorization')
 
     if (!authHeader) {
         throw createError({
