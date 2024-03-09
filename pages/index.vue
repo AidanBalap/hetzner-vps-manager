@@ -3,7 +3,7 @@
     const authToken = useCookie('auth')
     
     if (!authToken.value) {
-        $toast.alert('Debes establecer una contraseña para continuar')
+        $toast.warning('Debes establecer una contraseña para continuar')
         await navigateTo('/setToken')
     }
 
