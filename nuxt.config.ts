@@ -13,4 +13,8 @@ export default defineNuxtConfig({
     '/*': { ssr: false },
     '/*/**': { ssr: false },
   },
+
+  plugins: [
+    '~/plugins/toaster.client.ts',
+  ],
 })

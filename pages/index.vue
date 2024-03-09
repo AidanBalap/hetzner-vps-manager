@@ -6,6 +6,7 @@
     }
 
     // Fetch servers
+    const { $toast } = useNuxtApp();
     const servers = ref([])
     const snapshots = ref([])
 
@@ -16,7 +17,7 @@
         })
 
         if (response.status != 200) {
-            alert('Error al obtener los servidores')
+            $toast.error('Error al obtener los servidores')
             return
         }
 
@@ -30,26 +31,11 @@
         })
 
         if (response.status != 200) {
-            alert('Error al obtener los snapshots')
+            $toast.error('Error al obtener los snapshots')
             return
         }
 
         snapshots.value = await response.json()
-    }
-
-    const launchServer = async (id) => {
-        alert ("Lanzando el servidor, esto va a tardar un cojón y medio")
-        const response = await fetch('/api/snapshots/' + id + '/deploy', {
-            method: 'POST',
-            headers: { 'Authorization': `${authToken.value}` },
-        })
-
-        if (response.status != 200) {
-            alert('Error al lanzar el servidor')
-            return
-        }
-
-        window.location.reload()
     }
 
     fetchServers()

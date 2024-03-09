@@ -2,6 +2,8 @@
     const authToken = useCookie('auth')
     const props = defineProps(['snapshot'])
     const timestamp = new Date(props.snapshot.created)
+
+    const { $toast } = useNuxtApp()
     const statusColor = ref('')
     
     switch (props.snapshot.status) {
@@ -22,11 +24,15 @@
         })
 
         if (response.status != 200) {
-            alert('Error al lanzar el servidor')
+            $toast.error('Error al lanzar el servidor')
             return
         }
 
-        window.location.reload()
+        const data = await response.json()
+        const serverId = data.server.id
+
+        $toast.success('Servidor lanzado correctamente con ID: ' + serverId)
+        await navigateTo('/servers/' + serverId)
     }
 </script>
 

@@ -8,8 +8,10 @@
         await navigateTo('/setToken')
     }
 
+    const { $toast } = useNuxtApp()
     const server = ref({})
     const actions = ref({})
+
     const fetchServer = async () => {
         const response = await fetch('/api/servers/' + serverId, {
             method: 'GET',
@@ -17,7 +19,7 @@
         })
 
         if (response.status != 200) {
-            alert('Error al obtener el servidor')
+            $toast.error('Error al obtener el servidor')
             return
         }
 
@@ -31,7 +33,7 @@
         })
 
         if (response.status != 200) {
-            alert('Error al obtener las acciones')
+            $toast.error('Error al obtener las acciones')
             return
         }
 
@@ -45,22 +47,24 @@
     }
 
     const powerOn = async () => {
+        $toast.info('Encendiendo servidor')
+
         const response = await fetch('/api/servers/' + serverId + '/start', {
             method: 'POST',
             headers: { 'Authorization': `${authToken.value}` }
         })
 
         if (response.status != 200) {
-            alert(response.statusText)
+            $toast.error(response.statusText)
             return
-        } else {
-            alert('Server is on')
-            window.location.reload()
         }
+
+        $toast.success('Server is on')
+        refreshData()
     }
 
     const powerOff = async () => {
-        alert('Apagando servidor')
+        $toast.info('Apagando servidor')
         
         const response = await fetch('/api/servers/' + serverId + '/stop', {
             method: 'POST',
@@ -68,46 +72,73 @@
         })
 
         if (response.status != 200) {
-            alert(response.statusText)
+            $toast.error(response.statusText)
             return
-        } else {
-            alert('Server is off')
-            window.location.reload()
         }
+
+        $toast.success('Server is off')
+        refreshData()
     }
 
     const escalateServer = async () => {
-        alert  ('Escalando servidor')
+        if (server.value.status != 'off') {
+            $toast.error('El servidor debe estar apagado para escalarlo')
+            return
+        }
+
+        $toast.info ('Escalando servidor')
+
         const response = await fetch('/api/servers/' + serverId + '/scale', {
             method: 'POST',
             headers: { 'Authorization': `${authToken.value}` }
         })
 
         if (response.status != 200) {
-            alert(response.statusText)
+            $toast.error(response.statusText)
             return
         } else {
-            alert('Server is escalated')
-            window.location.reload()
+            $toast.success('Server is escalated')
+            refreshData()
         }
 
         fetchServer()
     }
 
     const toSnapshot = async () => {
-        alert('Creando snapshot')
+        $toast.info('Creando snapshot')
         const response = await fetch('/api/servers/'+ serverId +'/saveAndDelete?name='+ server.value.name, {
             method: 'GET',
             headers: { 'Authorization': `${authToken.value}`}
         })
 
         if (response.status != 200) {
-            alert(response.statusText)
+            $toast.error(response.statusText)
             return
-        } else {
-            window.location.href = '/'
-
         }
+        
+        $toast.success('Servidor congelado')
+        await navigateTo('/')
+    }
+
+    const deleteSv = async () => {
+        // Confirm dialog
+        if (!confirm('¿Estás seguro de que quieres borrar el servidor?')) {
+            return
+        }
+
+        $toast.info('Borrando servidor')
+
+        const response = await fetch('/api/servers/' + serverId + '/delete', {
+            headers: { 'Authorization': `${authToken.value}` }
+        })
+
+        if (response.status != 200) {
+            $toast.error(response.statusText)
+            return
+        }
+
+        $toast.success('Servidor eliminado')
+        await navigateTo('/')
     }
 
     setTimeout(() => {
@@ -115,6 +146,7 @@
     }, 1000 * 30)
 
     refreshData()
+
 </script>
 
 <template>
@@ -151,6 +183,7 @@
                     <button @click="powerOff()" class="bg-secondary/80 rounded-lg p-2 hover:scale-105 hover:underline">Apagar</button>
                     <button @click="escalateServer()" class="bg-secondary/80 rounded-lg p-2 hover:scale-105 hover:underline">Escalar</button>
                     <button @click="toSnapshot()" class="bg-secondary/80 rounded-lg p-2 hover:scale-105 hover:underline">Congelar 🧊</button>
+                    <button @click="deleteSv()" class="bg-red-400/80 rounded-lg p-2 hover:scale-105 hover:underline">Borrar 🚨</button>
                 </div>
             </div>
 
