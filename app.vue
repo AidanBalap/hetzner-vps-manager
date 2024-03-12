@@ -1,6 +1,7 @@
 <script setup>
   useHead({
     title: 'Hetzner Scaler by Gambus',
+    lang: 'es',
     meta: [{
       name: 'robots',
       content: 'noindex, nofollow'
