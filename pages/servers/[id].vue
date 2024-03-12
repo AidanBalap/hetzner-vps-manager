@@ -82,30 +82,6 @@
         refreshData()
     }
 
-    const escalateServer = async () => {
-        if (server.value.status != 'off') {
-            $toast.error('El servidor debe estar apagado para escalarlo')
-            return
-        }
-
-        $toast.info ('Escalando servidor')
-
-        const response = await fetch('/api/servers/' + serverId + '/scale', {
-            method: 'POST',
-            headers: { 'Authorization': `${authToken.value}` }
-        })
-
-        if (response.status != 200) {
-            $toast.error(response.statusText)
-            return
-        } else {
-            $toast.success('Server is escalated')
-            refreshData()
-        }
-
-        fetchServer()
-    }
-
     const toSnapshot = async () => {
         $toast.info('Creando snapshot')
         const response = await fetch('/api/servers/'+ serverId +'/saveAndDelete?name='+ server.value.name, {
@@ -183,7 +159,6 @@
                 <div class="flex flex-col py-4 gap-y-4">
                     <button @click="powerOn()" class="bg-secondary/80 rounded-lg p-2 hover:scale-105 hover:underline">Encender</button>
                     <button @click="powerOff()" class="bg-secondary/80 rounded-lg p-2 hover:scale-105 hover:underline">Apagar</button>
-                    <button @click="escalateServer()" class="bg-secondary/80 rounded-lg p-2 hover:scale-105 hover:underline">Escalar</button>
                     <button @click="toSnapshot()" class="bg-secondary/80 rounded-lg p-2 hover:scale-105 hover:underline">Congelar 🧊</button>
                     <button @click="deleteSv()" class="bg-red-400/80 rounded-lg p-2 hover:scale-105 hover:underline">Borrar 🚨</button>
                 </div>

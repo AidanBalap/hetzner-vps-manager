@@ -1,15 +1,14 @@
 
 export default defineEventHandler(async (event) => {
   const serverId = getRouterParam(event, 'id')
+
   const params = getQuery(event)
   const snapshotName = params.name
 
-  console.log(serverId, snapshotName)
-
-  if (!serverId || !snapshotName) {
+  if (!snapshotName) {
     throw createError({
         statusCode: 400,
-        statusMessage: 'serverId and snapshotName are required',
+        statusMessage: 'A name for the snapshot is required',
     })
   }
 
@@ -31,7 +30,6 @@ export default defineEventHandler(async (event) => {
   let response = await imageResponse.json()
   let actionResponse = response['action']
 
-  console.log(actionResponse)
 
   let isFinished = false
   while (!isFinished) {

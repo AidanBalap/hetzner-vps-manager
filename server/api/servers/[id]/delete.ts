@@ -1,19 +1,15 @@
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')
-    const response =  await fetch('https://api.hetzner.cloud/v1/servers/'+ id, {
+
+    const data = await $fetch('https://api.hetzner.cloud/v1/servers/'+ id, {
         method: 'DELETE',
-        headers: {
-            'Authorization': 'Bearer ' + process.env.HETZNER_API_KEY
-        }
-    })
-
-    if (response.status === 422 || response.status === 404) {
+        headers: { 'Authorization': 'Bearer ' + process.env.HETZNER_API_KEY }
+    }).catch((error) => {
         throw createError({
-            statusCode: response.status,
-            statusMessage: 'Server not found',
+            statusCode: error.status,
+            statusMessage: error.statusText,
         })
-    }
+    }) as HAction;
 
-    const reponseAction : HAction = await response.json()
-    return reponseAction
+    return data
 })
