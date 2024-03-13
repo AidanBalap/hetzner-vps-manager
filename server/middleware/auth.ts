@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
 
     if (!authHeader) {
         throw createError({
-            statusCode: 401,
+            statusCode: 400,
             statusMessage: 'Authorization header not found',
         })
     }
@@ -18,11 +18,4 @@ export default defineEventHandler(async (event) => {
             statusMessage: 'Unauthorized',
         })
     }
-
-    // if (token != 'hi') {
-    //     throw createError({
-    //         statusCode: 401,
-    //         statusMessage: 'Unauthorized',
-    //     })
-    // }
 })

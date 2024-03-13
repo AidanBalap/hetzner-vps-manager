@@ -45,8 +45,6 @@ export default defineEventHandler(async (event) => {
     if (fetchStatusAction.status != 'available') {
       isFinished = true
     } else {
-      console.log("waiting for created")
-      console.log(fetchStatusAction)
       await new Promise(r => setTimeout(r, 2500))
     }
   }
