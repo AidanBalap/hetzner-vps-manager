@@ -1,21 +1,18 @@
 <script setup lang="ts">
+    const { $toast } = useNuxtApp()
+    
     const authToken = useCookie('auth')
     const props = defineProps(['snapshot'])
     const timestamp = new Date(props.snapshot.created)
 
-    const { $toast } = useNuxtApp()
-    const statusColor = ref('')
-    
-    switch (props.snapshot.status) {
-        case 'available':
-            statusColor.value = 'bg-green-500'
-            break
-        case 'creating':
-            statusColor.value = 'bg-yellow-500'
-            break
-        default:
-            statusColor.value = 'bg-gray-500'
+    const statusColors = {
+        'available': 'bg-green-500',
+        'creating': 'bg-yellow-500',
+        'default': 'bg-gray-500'
     }
+
+    const statusColor = ref('')
+    statusColor.value = statusColors[props.snapshot.status as keyof typeof statusColors] || statusColors.default
 
     const deploySnapshot = async () => {
         const response = await fetch('/api/snapshots/' + props.snapshot.id + '/deploy?name='+ props.snapshot.description, {

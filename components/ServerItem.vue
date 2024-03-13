@@ -1,24 +1,17 @@
 <script setup lang="ts">
     const props = defineProps(['server'])
     const timestamp = new Date(props.server.created)
+
+    const statusColors = {
+        'running': 'bg-green-500',
+        'off': 'bg-red-500',
+        'initializing': 'bg-blue-500',
+        'migrating': 'bg-yellow-500',
+        'default': 'bg-gray-500'
+    }
     
     const statusColor = ref('')
-    switch (props.server.status) {
-        case 'running':
-            statusColor.value = 'bg-green-500'
-            break
-        case 'off':
-            statusColor.value = 'bg-red-500'
-            break
-        case 'initializing':
-            statusColor.value = 'bg-blue-500'
-            break
-        case 'migrating':
-            statusColor.value = 'bg-yellow-500'
-            break
-        default:
-            statusColor.value = 'bg-gray-500'
-    }
+    statusColor.value = statusColors[props.server.status as keyof typeof statusColors] || statusColors.default
 </script>
 
 <template>
