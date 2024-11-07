@@ -137,16 +137,7 @@
 
         <div v-if="server.status" class="flex flex-col pt-4">
             <div class="flex flex-col gap-y-4 mx-10 border-b-2 pb-4">
-                <div class="flex justify-center align-middle border-b-2 py-2">
-                    <p class="text-center w-[8%]">Estado</p>
-                    <p class="text-center w-[23%]">Nombre</p>
-                    <p class="text-center w-[19%]">IP</p>
-                    <p class="text-center w-[9%]">Type</p>
-                    <p class="text-center w-[9%]">Cores</p>
-                    <p class="text-center w-[9%]">RAM</p>
-                    <p class="text-center w-[9%]">€/mes</p>
-                    <p class="text-center w-[16%]">Creación</p>
-                </div>
+                <server-list-header />
 
                 <server-item :server="server" />
             </div>
