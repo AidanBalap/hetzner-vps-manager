@@ -15,7 +15,7 @@
     statusColor.value = statusColors[props.snapshot.status as keyof typeof statusColors] || statusColors.default
 
     const deploySnapshot = async () => {
-        const response = await fetch('/api/snapshots/' + props.snapshot.id + '/deploy?name='+ props.snapshot.description, {
+        const response = await fetch('/api/snapshots/' + props.snapshot.id + '/deploy', {
             method: 'POST',
             headers: { 'Authorization': `${authToken.value}` }
         })

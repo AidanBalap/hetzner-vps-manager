@@ -82,6 +82,20 @@ declare global {
                 };
             }[];
         }
+        datacenter: {
+            description: string;
+            id: number;
+            location: {
+                id: number;
+                name: string;
+                description: string;
+                country: string;
+                city: string;
+                latitude: number;
+                longitude: number;
+                network_zone: string;
+            };
+        }
         labels: {
             [key: string]: string;
         };
@@ -94,6 +108,7 @@ declare global {
         status: string;
         ipv4: string;
         type: string;
+        location: string;
         specs: {
             cores: number;
             memory: number;
@@ -126,5 +141,8 @@ declare global {
         };
         os_flavor: string;
         architecture: string;
+        labels: {
+            [key: string]: string;
+        };
     }
 }

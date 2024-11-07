@@ -1,16 +1,21 @@
+import dataToHServerType from "~/utils/dataToHServerType";
 
 export default defineEventHandler(async (event) => {
   const serverId = getRouterParam(event, 'id')
 
-  const params = getQuery(event)
-  const snapshotName = params.name
-
-  if (!snapshotName) {
+  const data = await $fetch('https://api.hetzner.cloud/v1/servers/'+ serverId, {
+    headers: { 'Authorization': 'Bearer ' + process.env.HETZNER_API_KEY }
+  }).catch((error) => {
     throw createError({
-        statusCode: 400,
-        statusMessage: 'A name for the snapshot is required',
+        statusCode: error.status,
+        statusMessage: error.statusText,
     })
-  }
+  }) as HRServer;
+  const serverData: HServer = dataToHServerType(data.server)
+
+  const date = serverData.created.split('T')[0]
+  const time = serverData.created.split('T')[1].split('+')[0].split(':').join('-')
+  const creationTimestamp = date + '_' + time
 
   const imageResponse =  await fetch('https://api.hetzner.cloud/v1/servers/'+ serverId + '/actions/create_image', {
     method: 'POST',
@@ -20,16 +25,19 @@ export default defineEventHandler(async (event) => {
     },
     body: JSON.stringify({
         type: 'snapshot',
-        description: snapshotName,
+        description: serverData.name,
         labels: {
-            'created': 'h-scaler',
+            'first_seen': serverData.labels['first_seen'] || creationTimestamp,
+            'server_type': serverData.type,
+            'location': serverData.location,
+            'created_by': 'gambuso-servers',
         }
     }),
   })
 
+
   let response = await imageResponse.json()
   let actionResponse = response['action']
-
 
   let isFinished = false
   while (!isFinished) {

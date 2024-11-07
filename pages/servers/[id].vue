@@ -84,7 +84,7 @@
 
     const toSnapshot = async () => {
         $toast.info('Creando snapshot')
-        const response = await fetch('/api/servers/'+ serverId +'/saveAndDelete?name='+ server.value.name, {
+        const response = await fetch('/api/servers/'+ serverId +'/saveAndDelete', {
             method: 'GET',
             headers: { 'Authorization': `${authToken.value}`}
         })

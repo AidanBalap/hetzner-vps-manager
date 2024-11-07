@@ -19,6 +19,7 @@ export default function (server: HSServer): HServer {
         status: server.status,
         ipv4: server.public_net.ipv4.ip || server.public_net.ipv6.ip,
         type: server.server_type.name,
+        location: server.datacenter.location.name,
         specs: {
             cores: server.server_type.cores,
             memory: server.server_type.memory,
