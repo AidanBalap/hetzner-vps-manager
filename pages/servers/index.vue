@@ -45,8 +45,8 @@
                     <p class="text-center w-[8%]">Estado</p>
                     <p class="text-center w-[30%]">Nombre</p>
                     <p class="text-center w-[10%]">Tipo</p>
-                    <p class="text-center w-[16%]">Precio</p>
                     <p class="text-center w-[16%]">Capacidad</p>
+                    <p class="text-center w-[16%]">Precio</p>
                     <p class="text-center w-[20%]">Creación</p>
                     <p class="text-center w-[10%]">Acción</p>
                 </div>
