@@ -82,6 +82,9 @@ declare global {
                 };
             }[];
         }
+        labels: {
+            [key: string]: string;
+        };
     }
 
     // Data sent to the client
@@ -101,6 +104,9 @@ declare global {
             monthly: number;
         };
         created: string;
+        labels: {
+            [key: string]: string;
+        };
     }
 
     interface HSnapshotList {

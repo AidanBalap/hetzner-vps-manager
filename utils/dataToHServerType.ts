@@ -28,6 +28,7 @@ export default function (server: HSServer): HServer {
             hourly: server.server_type.prices[0].price_hourly.net,
             monthly: server.server_type.prices[0].price_monthly.net
         },
+        labels: server.labels,
         created: server.created
     }
 }
