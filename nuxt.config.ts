@@ -2,6 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
+
   postcss: {
     plugins: {
       tailwindcss: {},
@@ -17,4 +18,6 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/toaster.client.ts',
   ],
+
+  compatibilityDate: '2024-11-07',
 })
