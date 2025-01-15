@@ -1,20 +1,12 @@
 <script setup>
     const { $toast } = useNuxtApp();
-    const authToken = useCookie('auth')
+    const { status } = useAuth()
+    const isAuthenticated = status.value === 'authenticated'
     
-    if (!authToken.value) {
-        $toast.warning('Debes establecer una contraseña para continuar')
-        await navigateTo('/setToken')
-    }
-
-    // Fetch servers
     const snapshots = ref([])
 
     const fetchSnapshots = async () => {
-        const response = await fetch('/api/snapshots', {
-            method: 'GET',
-            headers: { 'Authorization': `${authToken.value}` }
-        })
+        const response = await fetch('/api/snapshots')
 
         if (response.status != 200) {
             $toast.error('Error al obtener los snapshots')
@@ -24,7 +16,12 @@
         snapshots.value = await response.json()
     }
 
-    fetchSnapshots()
+    if (isAuthenticated) {
+        fetchSnapshots()
+    } else {
+        $toast.error("Necesitas estar autentificado")
+        await navigateTo('/')
+    }
 </script>
 
 <template>

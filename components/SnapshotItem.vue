@@ -17,10 +17,7 @@
     statusColor.value = statusColors[props.snapshot.status as keyof typeof statusColors] || statusColors.default
 
     const deploySnapshot = async () => {
-        const response = await fetch('/api/snapshots/' + props.snapshot.id + '/deploy', {
-            method: 'POST',
-            headers: { 'Authorization': `${authToken.value}` }
-        })
+        const response = await fetch('/api/snapshots/' + props.snapshot.id + '/deploy', {method: 'POST'})
 
         if (response.status != 200) {
             $toast.error('Error al lanzar el servidor')

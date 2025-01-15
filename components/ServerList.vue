@@ -1,12 +1,9 @@
 <script setup lang="ts">
-    const authToken = useCookie('auth')
+    const { $toast } = useNuxtApp();
     const servers = ref([])
 
     const fetchServers = async () => {
-        const response = await fetch('/api/servers', {
-            method: 'GET',
-            headers: { 'Authorization': `${authToken.value}` }
-        })
+        const response = await fetch('/api/servers')
 
         if (response.status != 200) {
             $toast.error('Error al obtener los servidores')
