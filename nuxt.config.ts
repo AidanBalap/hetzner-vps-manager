@@ -22,12 +22,25 @@ export default defineNuxtConfig({
   modules: [
     '@sidebase/nuxt-auth'
   ],
+
   auth: {
+    baseURL: process.env.AUTH_ORIGIN,
     provider: {
       type: 'authjs',
       trustHost: false,
       defaultProvider: 'discord',
       addDefaultCallbackUrl: true
+    }
+  },
+
+  runtimeConfig: {
+    hetznerApi: process.env.HETZNER_API_KEY,
+    auth: {
+      allowedUsers: process.env.ALLOWED_USERS ? process.env.ALLOWED_USERS.split(',') : [],
+      baseURL: process.env.AUTH_ORIGIN,
+      secret: process.env.AUTH_SECRET,
+      discordId: process.env.DISCORD_CLIENT_ID,
+      discordSecret: process.env.DISCORD_CLIENT_SECRET,
     }
   },
 

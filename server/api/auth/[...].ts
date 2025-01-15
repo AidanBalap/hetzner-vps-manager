@@ -1,15 +1,16 @@
 import DiscordProvider from 'next-auth/providers/discord'
 import { NuxtAuthHandler } from '#auth'
 
-const allowedUsers = process.env.ALLOWED_USERS ? process.env.ALLOWED_USERS.split(',') : []
+const runtimeConfig = useRuntimeConfig()
+const allowedUsers = runtimeConfig.auth.allowedUsers
 
 export default NuxtAuthHandler({
-  secret: process.env.AUTH_SECRET,
+  secret: runtimeConfig.auth.secret,
   providers: [
     // @ts-expect-error Use .default here for it to work during SSR.
     DiscordProvider.default({
-      clientId: process.env.DISCORD_CLIENT_ID,
-      clientSecret: process.env.DISCORD_CLIENT_SECRET
+      clientId: runtimeConfig.auth.discordId,
+      clientSecret: runtimeConfig.auth.discordSecret
     })
   ],
 

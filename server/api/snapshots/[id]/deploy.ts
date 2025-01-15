@@ -1,8 +1,10 @@
+const runtimeConfig = useRuntimeConfig()
+
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')
 
     const snaphotDataList: { image: HSnapshot } = await $fetch('https://api.hetzner.cloud/v1/images/'+ id, {
-        headers: { 'Authorization': 'Bearer ' + process.env.HETZNER_API_KEY }
+        headers: { 'Authorization': 'Bearer ' + runtimeConfig.hetznerApi }
     })
     const snaphotData = snaphotDataList.image as HSnapshot
     
@@ -13,7 +15,7 @@ export default defineEventHandler(async (event) => {
     const serverData =  await fetch('https://api.hetzner.cloud/v1/servers', {
         method: 'POST',
         headers: {
-            'Authorization': 'Bearer ' + process.env.HETZNER_API_KEY,
+            'Authorization': 'Bearer ' + runtimeConfig.hetznerApi,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
