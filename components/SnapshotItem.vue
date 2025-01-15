@@ -5,8 +5,6 @@
     const props = defineProps(['snapshot'])
     const timestamp = new Date(props.snapshot.created)
 
-    console.log(props.snapshot)
-
     const statusColors = {
         'available': 'bg-green-500',
         'creating': 'bg-yellow-500',

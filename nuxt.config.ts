@@ -41,6 +41,9 @@ export default defineNuxtConfig({
       secret: process.env.AUTH_SECRET,
       discordId: process.env.DISCORD_CLIENT_ID,
       discordSecret: process.env.DISCORD_CLIENT_SECRET,
+    },
+    public: {
+      appName: process.env.APP_NAME,
     }
   },
 

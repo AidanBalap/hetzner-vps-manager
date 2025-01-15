@@ -1,4 +1,5 @@
 <script setup>
+    const cfg = useRuntimeConfig();
     const { $toast } = useNuxtApp()
     const { status } = useAuth()
     const isAuthenticated = status.value === 'authenticated'
@@ -19,6 +20,9 @@
         }
 
         server.value = await response.json()
+        useHead({
+            title: cfg.public.appName + '- Servidor ' + server.value.name
+        })
     }
 
     const fetchLastActions = async () => {
@@ -98,6 +102,10 @@
     }
 
     if (isAuthenticated) {
+        useHead({
+            title: cfg.public.appName + '- Servidor ...'
+        })
+
         setTimeout(() => {
             refreshData()
         }, 1000 * 30)

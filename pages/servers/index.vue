@@ -1,4 +1,5 @@
 <script setup>
+    const cfg = useRuntimeConfig();
     const { $toast } = useNuxtApp();
     const { status } = useAuth()
     const isAuthenticated = status.value === 'authenticated'
@@ -17,6 +18,10 @@
     }
 
     if (isAuthenticated) {
+        useHead({
+            title: cfg.public.appName + '- Lista de Servidores'
+        })
+        
         fetchSnapshots()
     } else {
         $toast.error("Necesitas estar autentificado")
