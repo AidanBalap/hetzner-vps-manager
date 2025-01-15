@@ -1,6 +1,9 @@
+
 <script setup>
+  const cfg = useRuntimeConfig();
+
   useHead({
-    title: 'Hetzner Scaler by Gambus',
+    title: cfg.public.appName + ' - Inicio',
     lang: 'es',
     meta: [{
       name: 'robots',

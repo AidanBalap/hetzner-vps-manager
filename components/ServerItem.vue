@@ -5,10 +5,8 @@
     // format date with this 2024-11-06_10-10-00 -> 2024-11-06 10:10:00
     const fsTimestamp = props.server.labels.first_seen.split('_')
     const fsHour = fsTimestamp[1].replaceAll('-', ':') + '+00:00'
+    
     const firstSeenTimestampStr = fsTimestamp[0] + 'T' + fsHour
-
-
-    console.log(firstSeenTimestampStr)
     const firstSeenTimestamp = new Date(firstSeenTimestampStr)
 
     const statusColors = {

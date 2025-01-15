@@ -1,10 +1,17 @@
 <script setup>
-    const { $toast } = useNuxtApp();
-    $toast.success('Bienvenido')
+    const cfg = useRuntimeConfig();
+    const { status, data, signIn } = useAuth();
+    const isSignedIn = computed(() => status.value === 'authenticated');
 </script>
 
 <template>
-    <div class="py-20">
-        <h1 class="text-4xl font-bold text-center">Hola !</h1>
+    <h1 class="text-4xl py-20 font-bold text-center">Bienvenido a {{cfg.public.appName}}!</h1>
+    <div class="pb-10 px-4">
+        <p v-if="isSignedIn">Estás conectado como {{ data.user.name }}.</p>
+
+        <div v-else class="flex gap-x-4">
+            <p>Conectese para acceder a la lista de servidores:</p>
+            <button @click="signIn('discord')" class="underline">Iniciar sesión</button>
+        </div>
     </div>
 </template>

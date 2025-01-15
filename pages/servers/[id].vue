@@ -1,24 +1,18 @@
 <script setup>
+    const cfg = useRuntimeConfig();
     const { $toast } = useNuxtApp()
-
-    const route = useRoute()
-    const serverId = route.params.id
-
-    const authToken = useCookie('auth')
-
-    if (!authToken.value) {
-        $toast.alert('Debes establecer una contraseña para continuar')
-        await navigateTo('/setToken')
-    }
-
+    const { status } = useAuth()
+    const isAuthenticated = status.value === 'authenticated'
+    
     const server = ref({})
     const actions = ref({})
+    
+    const route = useRoute()
+    const serverId = route.params.id
+    const baseServerUrl = '/api/servers/' + serverId
 
     const fetchServer = async () => {
-        const response = await fetch('/api/servers/' + serverId, {
-            method: 'GET',
-            headers: { 'Authorization': `${authToken.value}` }
-        })
+        const response = await fetch(baseServerUrl)
 
         if (response.status != 200) {
             $toast.error('Error al obtener el servidor')
@@ -26,13 +20,13 @@
         }
 
         server.value = await response.json()
+        useHead({
+            title: cfg.public.appName + '- Servidor ' + server.value.name
+        })
     }
 
     const fetchLastActions = async () => {
-        const response = await fetch('/api/servers/' + serverId + '/actions', {
-            method: 'GET',
-            headers: { 'Authorization': `${authToken.value}` }
-        })
+        const response = await fetch(baseServerUrl + '/actions')
 
         if (response.status != 200) {
             $toast.error('Error al obtener las acciones')
@@ -51,10 +45,7 @@
     const powerOn = async () => {
         $toast.info('Encendiendo servidor')
 
-        const response = await fetch('/api/servers/' + serverId + '/start', {
-            method: 'POST',
-            headers: { 'Authorization': `${authToken.value}` }
-        })
+        const response = await fetch(baseServerUrl + '/start', {method: 'POST'})
 
         if (response.status != 200) {
             $toast.error(response.statusText)
@@ -68,10 +59,7 @@
     const powerOff = async () => {
         $toast.info('Apagando servidor')
         
-        const response = await fetch('/api/servers/' + serverId + '/stop', {
-            method: 'POST',
-            headers: { 'Authorization': `${authToken.value}` }
-        })
+        const response = await fetch(baseServerUrl + '/stop', {method: 'POST'})
 
         if (response.status != 200) {
             $toast.error(response.statusText)
@@ -84,10 +72,7 @@
 
     const toSnapshot = async () => {
         $toast.info('Creando snapshot')
-        const response = await fetch('/api/servers/'+ serverId +'/saveAndDelete', {
-            method: 'GET',
-            headers: { 'Authorization': `${authToken.value}`}
-        })
+        const response = await fetch(baseServerUrl +'/saveAndDelete')
 
         if (response.status != 200) {
             $toast.error(response.statusText)
@@ -99,16 +84,13 @@
     }
 
     const deleteSv = async () => {
-        // Confirm dialog
         if (!confirm('¿Estás seguro de que quieres borrar el servidor?')) {
             return
         }
 
         $toast.info('Borrando servidor')
 
-        const response = await fetch('/api/servers/' + serverId + '/delete', {
-            headers: { 'Authorization': `${authToken.value}` }
-        })
+        const response = await fetch(baseServerUrl + '/delete')
 
         if (response.status != 200) {
             $toast.error(response.statusText)
@@ -119,11 +101,19 @@
         await navigateTo('/')
     }
 
-    setTimeout(() => {
-        refreshData()
-    }, 1000 * 30)
+    if (isAuthenticated) {
+        useHead({
+            title: cfg.public.appName + '- Servidor ...'
+        })
 
-    refreshData()
+        setTimeout(() => {
+            refreshData()
+        }, 1000 * 30)
+        
+        refreshData()
+    } else {
+        await navigateTo('/')
+    }
 
 </script>
 

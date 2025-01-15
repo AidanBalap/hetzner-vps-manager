@@ -1,10 +1,11 @@
 import dataToHServerType from "~/utils/dataToHServerType";
+const runtimeConfig = useRuntimeConfig()
 
 export default defineEventHandler(async (event) => {
   const serverId = getRouterParam(event, 'id')
 
   const data = await $fetch('https://api.hetzner.cloud/v1/servers/'+ serverId, {
-    headers: { 'Authorization': 'Bearer ' + process.env.HETZNER_API_KEY }
+    headers: { 'Authorization': 'Bearer ' +  runtimeConfig.hetznerApi }
   }).catch((error) => {
     throw createError({
         statusCode: error.status,
@@ -20,7 +21,7 @@ export default defineEventHandler(async (event) => {
   const imageResponse =  await fetch('https://api.hetzner.cloud/v1/servers/'+ serverId + '/actions/create_image', {
     method: 'POST',
     headers: {
-        'Authorization': 'Bearer ' + process.env.HETZNER_API_KEY,
+        'Authorization': 'Bearer ' + runtimeConfig.hetznerApi,
         'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -44,7 +45,7 @@ export default defineEventHandler(async (event) => {
     const fetchStatusResponse = await fetch('https://api.hetzner.cloud/v1/actions/'+ actionResponse.id, {
       method: 'GET',
       headers: {
-          'Authorization': 'Bearer ' + process.env.HETZNER_API_KEY
+          'Authorization': 'Bearer ' + runtimeConfig.hetznerApi
       }
     })
 
@@ -60,7 +61,7 @@ export default defineEventHandler(async (event) => {
   const deleteResponse = await fetch('https://api.hetzner.cloud/v1/servers/'+ serverId, {
     method: 'DELETE',
     headers: {
-        'Authorization': 'Bearer ' + process.env.HETZNER_API_KEY
+        'Authorization': 'Bearer ' + runtimeConfig.hetznerApi
     }
   })
 
