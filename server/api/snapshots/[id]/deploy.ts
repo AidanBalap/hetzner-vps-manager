@@ -9,8 +9,6 @@ export default defineEventHandler(async (event) => {
     const snaphotData = snaphotDataList.image as HSnapshot
     
     const finalLabels = snaphotData.labels
-    delete finalLabels.server_type
-    delete finalLabels.location
 
     const serverData =  await fetch('https://api.hetzner.cloud/v1/servers', {
         method: 'POST',

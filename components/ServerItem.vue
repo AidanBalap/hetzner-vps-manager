@@ -1,13 +1,17 @@
 <script setup lang="ts">
     const props = defineProps(['server'])
     const timestamp = new Date(props.server.created)
+    let firstSeenTimestamp;
     
     // format date with this 2024-11-06_10-10-00 -> 2024-11-06 10:10:00
-    const fsTimestamp = props.server.labels.first_seen.split('_')
-    const fsHour = fsTimestamp[1].replaceAll('-', ':') + '+00:00'
-    
-    const firstSeenTimestampStr = fsTimestamp[0] + 'T' + fsHour
-    const firstSeenTimestamp = new Date(firstSeenTimestampStr)
+    if (props.server.labels.first_seen) {
+        const fsTimestamp = props.server.labels.first_seen.split('_')
+        const fsHour = fsTimestamp[1].replaceAll('-', ':') + '+00:00'
+        
+        firstSeenTimestamp = new Date(fsTimestamp[0] + 'T' + fsHour)
+    } else {
+        firstSeenTimestamp = timestamp
+    }
 
     const statusColors = {
         'running': 'bg-green-500',
