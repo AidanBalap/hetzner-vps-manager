@@ -3,14 +3,17 @@
     const timestamp = new Date(props.server.created)
     let firstSeenTimestamp;
     
-    // format date with this 2024-11-06_10-10-00 -> 2024-11-06 10:10:00
+    // format date with this 2024-11-06_10-00-00Z -> 2024-11-06 10:00:00
     if (props.server.labels.first_seen) {
-        const fsTimestamp = props.server.labels.first_seen.split('_')
-        const fsHour = fsTimestamp[1].replaceAll('-', ':') + '+00:00'
-        
-        firstSeenTimestamp = new Date(fsTimestamp[0] + 'T' + fsHour)
+        const [datePart, timePartWithZ] = props.server.labels.first_seen.split('_');
+        const timePart = timePartWithZ.replace(/-/g, ':').replace('Z', '');
+
+        const isoString = `${datePart}T${timePart}Z`;
+        const parsedDate = new Date(isoString);
+
+        firstSeenTimestamp = isNaN(parsedDate.getTime()) ? timestamp : parsedDate;
     } else {
-        firstSeenTimestamp = timestamp
+        firstSeenTimestamp = timestamp;
     }
 
     const statusColors = {
