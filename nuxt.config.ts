@@ -1,45 +1,17 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: { enabled: true },
-  css: ['~/assets/css/main.css'],
 
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
-    },
-  },
-
-  routeRules: {
-    '/*': { ssr: false },
-    '/*/**': { ssr: false },
-  },
+  modules: [
+    '@sidebase/nuxt-auth',
+    '@nuxt/eslint',
+  ],
 
   plugins: [
     '~/plugins/toaster.client.ts',
   ],
+  devtools: { enabled: true },
+  css: ['~/assets/css/main.css'],
 
-  modules: [
-    '@sidebase/nuxt-auth',
-    '@nuxt/eslint'
-  ],
-
-  auth: {
-    baseURL: process.env.AUTH_ORIGIN,
-    provider: {
-      type: 'authjs',
-      trustHost: false,
-      defaultProvider: 'discord',
-      addDefaultCallbackUrl: true
-    }
-  },
-
-  eslint: {
-    config: {
-      stylistic: true
-    }
-  },
-  
   runtimeConfig: {
     hetznerApi: process.env.HETZNER_API_KEY,
     auth: {
@@ -51,8 +23,38 @@ export default defineNuxtConfig({
     },
     public: {
       appName: process.env.APP_NAME,
-    }
+    },
+  },
+
+  routeRules: {
+    '/*': { ssr: false },
+    '/*/**': { ssr: false },
   },
 
   compatibilityDate: '2024-11-07',
-})
+
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
+
+  auth: {
+    baseURL: process.env.AUTH_ORIGIN,
+    provider: {
+      type: 'authjs',
+      trustHost: false,
+      defaultProvider: 'discord',
+      addDefaultCallbackUrl: true,
+    },
+  },
+
+  eslint: {
+    config: {
+      stylistic: true,
+    },
+    emitWarning: true, // Show warnings
+    emitError: true, // Show errors
+  },
+});

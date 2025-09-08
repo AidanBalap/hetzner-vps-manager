@@ -5,7 +5,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   const toast = useToast({
     position: 'top-right',
   });
-  
+
   return {
     provide: {
       toast,
