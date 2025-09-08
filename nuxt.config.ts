@@ -20,7 +20,8 @@ export default defineNuxtConfig({
   ],
 
   modules: [
-    '@sidebase/nuxt-auth'
+    '@sidebase/nuxt-auth',
+    '@nuxt/eslint'
   ],
 
   auth: {
@@ -33,6 +34,12 @@ export default defineNuxtConfig({
     }
   },
 
+  eslint: {
+    config: {
+      stylistic: true
+    }
+  },
+  
   runtimeConfig: {
     hetznerApi: process.env.HETZNER_API_KEY,
     auth: {
