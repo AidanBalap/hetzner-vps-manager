@@ -30,8 +30,25 @@ export const useServers = () => {
     return result ?? [];
   };
 
+  /**
+   * Deploy a new server from a snapshot
+   * @param snapshotId - ID of the snapshot to deploy from
+   */
+  const deploySnapshot = async (snapshotId: number): Promise<CloudServer | null> => {
+    const result: CloudServer | null = await api.post(
+      `/api/snapshots/${snapshotId}/deploy`,
+      'Error al desplegar el snapshot',
+    );
+    if (result) {
+      const { $toast } = useNuxtApp();
+      $toast.success(`Servidor ${result.name} creado con éxito`);
+    }
+    return result;
+  };
+
   return {
     fetchServers,
     fetchSnapshots,
+    deploySnapshot,
   };
 };

@@ -12,6 +12,13 @@ const servers = useServers();
 const serversList = ref<CloudServer[]>([]);
 const snapshots = ref<Image[]>([]);
 
+const deploySnapshot = async (snapshot: Image) => {
+  const newServer = await servers.deploySnapshot(snapshot.id);
+  if (newServer) {
+    serversList.value.push(newServer);
+  }
+};
+
 // Fetch snapshots on component mount
 onMounted(async () => {
   updatePageTitle('Servidores');
@@ -43,6 +50,7 @@ onMounted(async () => {
       <div class="flex flex-col gap-y-4">
         <SnapshotsList
           :snapshots="snapshots"
+          @deploy="deploySnapshot"
         />
       </div>
     </div>
