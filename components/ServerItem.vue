@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const props = defineProps<{ server: HServer }>();
+import type { CloudServer } from '~/types/HetznerCloudApi/CloudServer';
+
+const props = defineProps<{ server: CloudServer }>();
 const timestamp = new Date(props.server.created);
 let firstSeenTimestamp;
 
@@ -41,9 +43,9 @@ statusColor.value = statusColors[props.server.status as keyof typeof statusColor
       />
     </p>
     <p class="text-center w-[23%]">{{ props.server.name }}</p>
-    <p class="text-center w-[19%]">{{ props.server.ipv4 }}</p>
-    <p class="text-center w-[12%]">{{ props.server.specs.cores }} cores | {{ props.server.specs.memory }}GB</p>
-    <p class="text-center w-[12%]">{{ Math.round(props.server.price.monthly * 100) / 100 }}€</p>
+    <p class="text-center w-[19%]">{{ props.server.public_net.ipv4.ip }}</p>
+    <p class="text-center w-[12%]">{{ props.server.server_type.cores }} cores | {{ props.server.server_type.memory }}GB</p>
+    <p class="text-center w-[12%]">{{ Math.round(props.server.server_type.prices[0].price_hourly.net * 100) / 100 }}€</p>
     <p class="text-center w-[14%]">{{ dateToTimeAgo(timestamp) }}</p>
     <p class="text-center w-[14%]">{{ dateToTimeAgo(firstSeenTimestamp) }}</p>
   </router-link>

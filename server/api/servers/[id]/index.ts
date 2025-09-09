@@ -1,19 +1,8 @@
-import dataToHServerType from '~/utils/dataToHServerType';
-
-const runtimeConfig = useRuntimeConfig();
+import HetznerClient from '~/lib/hetznerClient';
 
 export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, 'id');
+  const id = Number(getRouterParam(event, 'id'));
 
-  const data = await $fetch('https://api.hetzner.cloud/v1/servers/' + id, {
-    headers: { Authorization: 'Bearer ' + runtimeConfig.hetznerApi },
-  }).catch((error) => {
-    throw createError({
-      statusCode: error.status,
-      statusMessage: error.statusText,
-    });
-  }) as HRServer;
-
-  const serverRealList: HServer = dataToHServerType(data.server);
-  return serverRealList;
+  const hetzner = new HetznerClient();
+  return (await hetzner.getServer(id)).server; // TODO: Adapters to reduce the info returned
 });

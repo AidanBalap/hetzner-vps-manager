@@ -1,10 +1,12 @@
-<script setup>
+<script setup lang="ts">
+import type { Image } from '~/types/HetznerCloudApi/CloudServer';
+
 const cfg = useRuntimeConfig();
 const { $toast } = useNuxtApp();
 const { status } = useAuth();
 const isAuthenticated = status.value === 'authenticated';
 
-const snapshots = ref([]);
+const snapshots = ref<Image[]>();
 
 const fetchSnapshots = async () => {
   const response = await fetch('/api/snapshots');

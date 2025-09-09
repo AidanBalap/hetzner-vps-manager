@@ -1,57 +1,40 @@
-import dataToHServerType from '~/utils/dataToHServerType';
-
-const runtimeConfig = useRuntimeConfig();
+import HetznerClient from '~/lib/hetznerClient';
 
 export default defineEventHandler(async (event) => {
-  const serverId = getRouterParam(event, 'id');
+  const serverId = Number(getRouterParam(event, 'id'));
 
-  const data = await $fetch('https://api.hetzner.cloud/v1/servers/' + serverId, {
-    headers: { Authorization: 'Bearer ' + runtimeConfig.hetznerApi },
-  }).catch((error) => {
+  const hetzner = new HetznerClient();
+  const server = (await hetzner.getServer(serverId)).server;
+
+  if (!server) {
     throw createError({
-      statusCode: error.status,
-      statusMessage: error.statusText,
+      statusCode: 404,
+      statusMessage: 'Server not found',
     });
-  }) as HRServer;
-  const serverData: HServer = dataToHServerType(data.server);
+  }
 
-  const date = serverData.created.split('T')[0];
-  const time = serverData.created.split('T')[1].split('+')[0].split(':').join('-');
+  const date = server.created.split('T')[0];
+  const time = server.created.split('T')[1].split('+')[0].split(':').join('-');
   const creationTimestamp = date + '_' + time;
 
-  const imageResponse = await fetch('https://api.hetzner.cloud/v1/servers/' + serverId + '/actions/create_image', {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Bearer ' + runtimeConfig.hetznerApi,
-      'Content-Type': 'application/json',
+  const newImage = await hetzner.createSnapshot(serverId, {
+    description: server.name,
+    type: 'snapshot',
+    labels: {
+      first_seen: server.labels['first_seen'] || creationTimestamp,
+      server_type: server.server_type.name,
+      location: server.datacenter.location.name,
+      created_by: 'gambuso-servers',
     },
-    body: JSON.stringify({
-      type: 'snapshot',
-      description: serverData.name,
-      labels: {
-        first_seen: serverData.labels['first_seen'] || creationTimestamp,
-        server_type: serverData.type,
-        location: serverData.location,
-        created_by: 'gambuso-servers',
-      },
-    }),
   });
 
-  const response = await imageResponse.json();
-  const actionResponse = response['action'];
+  const actionResponse = newImage.action;
 
   let isFinished = false;
   while (!isFinished) {
-    const fetchStatusResponse = await fetch('https://api.hetzner.cloud/v1/actions/' + actionResponse.id, {
-      method: 'GET',
-      headers: {
-        Authorization: 'Bearer ' + runtimeConfig.hetznerApi,
-      },
-    });
+    const actionStatus = (await hetzner.getAction(actionResponse.id)).action;
 
-    const fetchStatusAction: HAction = await fetchStatusResponse.json();
-
-    if (fetchStatusAction.status != 'available') {
+    if (actionStatus.status != 'running') {
       isFinished = true;
     }
     else {
@@ -59,13 +42,6 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const deleteResponse = await fetch('https://api.hetzner.cloud/v1/servers/' + serverId, {
-    method: 'DELETE',
-    headers: {
-      Authorization: 'Bearer ' + runtimeConfig.hetznerApi,
-    },
-  });
-
-  const deleteResponseAction: HAction = await deleteResponse.json();
-  return deleteResponseAction;
+  const deleteServerAction = (await hetzner.deleteServer(serverId)).action;
+  return deleteServerAction;
 });

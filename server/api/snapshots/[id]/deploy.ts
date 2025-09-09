@@ -1,38 +1,24 @@
-const runtimeConfig = useRuntimeConfig();
+import HetznerClient from '~/lib/hetznerClient';
 
 export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, 'id');
+  const id = Number(getRouterParam(event, 'id'));
 
-  const snaphotDataList: { image: HSnapshot } = await $fetch('https://api.hetzner.cloud/v1/images/' + id, {
-    headers: { Authorization: 'Bearer ' + runtimeConfig.hetznerApi },
-  });
-  const snaphotData = snaphotDataList.image as HSnapshot;
+  const hetzner = new HetznerClient();
+  const snapshotData = (await hetzner.getSnapshot(id)).image;
 
-  const finalLabels = snaphotData.labels;
+  const finalLabels = snapshotData.labels;
 
-  const serverData = await fetch('https://api.hetzner.cloud/v1/servers', {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Bearer ' + runtimeConfig.hetznerApi,
-      'Content-Type': 'application/json',
+  const serverData = await hetzner.createServer({
+    name: snapshotData.description,
+    image: String(snapshotData.id),
+    server_type: snapshotData.labels.server_type,
+    location: snapshotData.labels.location,
+    user_data: '#cloud-config\nruncmd:\n- [touch, /root/cloud-init-worked]\n',
+    public_net: {
+      enable_ipv4: true,
+      enable_ipv6: true,
     },
-    body: JSON.stringify({
-      automount: false,
-      image: snaphotData.id,
-      labels: finalLabels,
-      location: snaphotData.labels.location,
-      name: snaphotData.description,
-      public_net: {
-        enable_ipv4: true,
-        enable_ipv6: true,
-      },
-
-      server_type: snaphotData.labels.server_type,
-      start_after_create: true,
-      user_data: '#cloud-config\nruncmd:\n- [touch, /root/cloud-init-worked]\n',
-    }),
   });
 
-  const responseJson = await serverData.json();
-  return responseJson;
+  return serverData.server;
 });

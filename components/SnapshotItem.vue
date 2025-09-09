@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import type { Image } from '~/types/HetznerCloudApi/CloudServer';
+
 const { $toast } = useNuxtApp();
 
 const authToken = useCookie('auth');
-const props = defineProps<{ snapshot: HSnapshot }>();
+const props = defineProps<{ snapshot: Image }>();
 const timestamp = new Date(props.snapshot.created);
 
 const statusColors = {
@@ -45,10 +47,10 @@ const deploySnapshot = async () => {
       {{ props.snapshot.labels.server_type }}
     </p>
     <p class="text-center w-[16%]">
-      {{ Math.round(snapshot.image_size * 100) / 100 }} / {{ snapshot.disk_size }} GB
+      {{ Math.round(((props.snapshot.image_size ?? 0) * 100) / 100) }} / {{ props.snapshot.disk_size }} GB
     </p>
     <p class="text-center w-[16%]">
-      {{ Math.round((snapshot.image_size * 0.011) * 1000) / 1000 }}€/mes
+      {{ Math.round(((props.snapshot.image_size ?? 0) * 0.011) * 1000) / 1000 }}€/mes
     </p>
     <p class="text-center w-[20%]">
       {{ dateToTimeAgo(timestamp) }}
