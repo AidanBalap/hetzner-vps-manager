@@ -11,9 +11,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const date = server.created.split('T')[0];
-  const time = server.created.split('T')[1].split('+')[0].split(':').join('-');
-  const creationTimestamp = date + '_' + time;
+  const creationTimestamp = server.created.replace(':', '_'); // labels cannot have ':'
 
   const newImage = await hetzner.createSnapshot(serverId, {
     description: server.name,

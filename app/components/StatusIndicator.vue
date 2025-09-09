@@ -1,10 +1,14 @@
 <script setup lang="ts">
 const statusColors = {
   // Server status
-  running: 'bg-green-500',
-  off: 'bg-red-500',
   initializing: 'bg-blue-500',
+  starting: 'bg-blue-500',
+  running: 'bg-green-500',
+  stopping: 'bg-yellow-500',
+  off: 'bg-red-500',
   migrating: 'bg-yellow-500',
+  rebuilding: 'bg-yellow-500',
+  deleting: 'bg-red-500',
 
   // Snapshot status
   available: 'bg-green-500',
