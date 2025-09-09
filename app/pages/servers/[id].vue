@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useServerActions } from '~/composables/useServerActions';
+import ActionsList from '~/components/partials/ActionsList.vue';
 import type { CloudServer } from '~~/types/HetznerCloudApi/CloudServer';
 import type { Action } from '~~/types/HetznerCloudApi/Generic';
 
