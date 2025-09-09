@@ -1,10 +1,4 @@
-const runtimeConfig = useRuntimeConfig()
-
-export default defineEventHandler(async (event) => {
-
-    const data:HSnapshotList = await $fetch('https://api.hetzner.cloud/v1/images?type=snapshot&sort=created:desc', {
-        headers: { 'Authorization': 'Bearer ' + runtimeConfig.hetznerApi }
-    })
-
-    return data.images
-})
+export default defineEventHandler(async () => {
+  const hetzner = useHetznerClient();
+  return (await hetzner.listSnapshots()).images;
+});
