@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
       first_seen: server.labels['first_seen'] || creationTimestamp,
       server_type: server.server_type.name,
       location: server.datacenter.location.name,
-      created_by: 'gambuso-servers',
+      created_by: 'hz-deployer',
     },
   });
 

@@ -22,7 +22,7 @@ class HetznerClient {
     });
 
     if (!response.ok) {
-      throw new Error(`Hetzner API error: ${response.status}`);
+      throw new Error(`Hetzner API error: ${response.status} ${response.statusText}`);
     }
 
     return response.json();
