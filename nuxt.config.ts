@@ -31,7 +31,11 @@ export default defineNuxtConfig({
     '/*/**': { ssr: false },
   },
 
-  compatibilityDate: '2024-11-07',
+  compatibilityDate: '2025-09-09',
+
+  nitro: {
+    preset: 'cloudflare-pages',
+  },
 
   postcss: {
     plugins: {
