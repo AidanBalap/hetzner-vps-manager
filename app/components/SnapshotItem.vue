@@ -7,15 +7,6 @@ const authToken = useCookie('auth');
 const props = defineProps<{ snapshot: Image }>();
 const timestamp = new Date(props.snapshot.created);
 
-const statusColors = {
-  available: 'bg-green-500',
-  creating: 'bg-yellow-500',
-  default: 'bg-gray-500',
-};
-
-const statusColor = ref('');
-statusColor.value = statusColors[props.snapshot.status as keyof typeof statusColors] || statusColors.default;
-
 const deploySnapshot = async () => {
   const response = await fetch('/api/snapshots/' + props.snapshot.id + '/deploy', { method: 'POST' });
 
@@ -35,10 +26,7 @@ const deploySnapshot = async () => {
 <template>
   <div class="flex bg-secondary rounded-xl py-4">
     <p class="flex w-[8%] justify-center align-middle">
-      <span
-        class="block size-6 rounded-full"
-        :class="statusColor"
-      />
+      <StatusIndicator :status="props.snapshot.status" />
     </p>
     <p class="text-center w-[30%]">
       {{ props.snapshot.description }}

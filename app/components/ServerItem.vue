@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CloudServer } from '~/types/HetznerCloudApi/CloudServer';
+import type { CloudServer } from '../../types/HetznerCloudApi/CloudServer';
 
 const props = defineProps<{ server: CloudServer }>();
 const timestamp = new Date(props.server.created);
@@ -18,17 +18,6 @@ if (props.server.labels.first_seen) {
 else {
   firstSeenTimestamp = timestamp;
 }
-
-const statusColors = {
-  running: 'bg-green-500',
-  off: 'bg-red-500',
-  initializing: 'bg-blue-500',
-  migrating: 'bg-yellow-500',
-  default: 'bg-gray-500',
-};
-
-const statusColor = ref('');
-statusColor.value = statusColors[props.server.status as keyof typeof statusColors] || statusColors.default;
 </script>
 
 <template>
@@ -37,10 +26,7 @@ statusColor.value = statusColors[props.server.status as keyof typeof statusColor
     class="flex bg-secondary hover:bg-[#454545] hover:scale-105 rounded-xl py-4"
   >
     <p class="flex w-[8%] justify-center align-middle">
-      <span
-        class="block size-6 rounded-full"
-        :class="statusColor"
-      />
+      <StatusIndicator :status="props.server.status" />
     </p>
     <p class="text-center w-[23%]">{{ props.server.name }}</p>
     <p class="text-center w-[19%]">{{ props.server.public_net.ipv4.ip }}</p>
