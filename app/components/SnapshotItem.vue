@@ -15,7 +15,7 @@ const creationTimestamp = new Date(props.snapshot.created);
     </p>
     <p class="text-center w-[30%]">{{ props.snapshot.description }}</p>
     <p class="text-center w-[10%]">{{ props.snapshot.labels.server_type }}</p>
-    <p class="text-center w-[16%]">{{ Math.round(((props.snapshot.image_size ?? 0) * 100) / 100) }} / {{ props.snapshot.disk_size }} GB</p>
+    <p class="text-center w-[16%]">{{ ((props.snapshot.image_size ?? 0) * 100 / 100).toFixed(2) }} / {{ props.snapshot.disk_size }} GB</p>
     <p class="text-center w-[16%]">{{ Math.round(((props.snapshot.image_size ?? 0) * 0.011) * 1000) / 1000 }}€/mes</p>
     <p class="text-center w-[20%]">{{ dateToTimeAgo(creationTimestamp) }}</p>
     <div class="flex justify-center text-center w-[10%]">
