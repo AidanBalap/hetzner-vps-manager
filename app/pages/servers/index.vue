@@ -1,35 +1,30 @@
 <script setup lang="ts">
-import type { Image } from '~/types/HetznerCloudApi/CloudServer';
+import { useServers } from '~/composables/useServers';
 
 const cfg = useRuntimeConfig();
 const { $toast } = useNuxtApp();
 const { status } = useAuth();
 const isAuthenticated = status.value === 'authenticated';
 
-const snapshots = ref<Image[]>();
-
-const fetchSnapshots = async () => {
-  const response = await fetch('/api/snapshots');
-
-  if (response.status != 200) {
-    $toast.error('Error al obtener los snapshots');
-    return;
-  }
-
-  snapshots.value = await response.json();
-};
-
-if (isAuthenticated) {
-  useHead({
-    title: cfg.public.appName + '- Lista de Servidores',
-  });
-
-  fetchSnapshots();
-}
-else {
+// Redirect if not authenticated
+if (!isAuthenticated) {
   $toast.error('Necesitas estar autentificado');
   await navigateTo('/');
 }
+
+const servers = useServers();
+const snapshots = ref([]);
+const serversList = ref([]);
+
+// Fetch snapshots on component mount
+onMounted(async () => {
+  useHead({
+    title: `${cfg.public.appName} - Lista de Servidores`,
+  });
+
+  snapshots.value = await servers.fetchSnapshots();
+  serversList.value = await servers.fetchServers();
+});
 </script>
 
 <template>
@@ -40,7 +35,10 @@ else {
       </h3>
 
       <div class="flex flex-col gap-y-4">
-        <server-list />
+        <ServersList
+          :servers="serversList"
+          :clickable="true"
+        />
       </div>
     </div>
 
@@ -50,34 +48,8 @@ else {
       </h3>
 
       <div class="flex flex-col gap-y-4">
-        <div class="flex justify-center align-middle border-b-2 py-2">
-          <p class="text-center w-[8%]">
-            Estado
-          </p>
-          <p class="text-center w-[30%]">
-            Nombre
-          </p>
-          <p class="text-center w-[10%]">
-            Tipo
-          </p>
-          <p class="text-center w-[16%]">
-            Capacidad
-          </p>
-          <p class="text-center w-[16%]">
-            Precio
-          </p>
-          <p class="text-center w-[20%]">
-            Creación
-          </p>
-          <p class="text-center w-[10%]">
-            Acción
-          </p>
-        </div>
-
-        <snapshot-item
-          v-for="snapshot in snapshots"
-          :key="snapshot.id"
-          :snapshot="snapshot"
+        <SnapshotsList
+          :snapshots="snapshots"
         />
       </div>
     </div>

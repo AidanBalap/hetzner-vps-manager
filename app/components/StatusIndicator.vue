@@ -13,6 +13,7 @@ const statusColors = {
   // Snapshot status
   available: 'bg-green-500',
   creating: 'bg-yellow-500',
+  unavailable: 'bg-red-500',
 
   default: 'bg-gray-500',
 };
