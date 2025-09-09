@@ -6,13 +6,14 @@ export default defineEventHandler(async (event) => {
   const hetzner = new HetznerClient();
   const snapshotData = (await hetzner.getSnapshot(id)).image;
 
-  const finalLabels = snapshotData.labels;
+  const { location, server_type, ...filteredLabels } = snapshotData.labels;
 
   const serverData = await hetzner.createServer({
     name: snapshotData.description,
     image: String(snapshotData.id),
-    server_type: snapshotData.labels.server_type,
-    location: snapshotData.labels.location,
+    server_type: server_type,
+    location: location,
+    labels: filteredLabels,
     user_data: '#cloud-config\nruncmd:\n- [touch, /root/cloud-init-worked]\n',
     public_net: {
       enable_ipv4: true,
