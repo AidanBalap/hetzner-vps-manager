@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const creationTimestamp = server.created.replace(':', '_'); // labels cannot have ':'
+  const creationTimestamp = server.created.replaceAll(':', '_'); // labels cannot have ':'
 
   const newImage = await hetzner.createSnapshot(serverId, {
     description: server.name,

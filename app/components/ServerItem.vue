@@ -7,7 +7,7 @@ const props = defineProps<{
 
 const currentLocationPrice = props.server.server_type.prices.find(price => price.location === props.server.datacenter.location.name);
 const creationTimestamp = new Date(props.server.created);
-const firstSeenTimestamp = props.server.labels.first_seen ? new Date(props.server.labels.first_seen.replace('_', ':')) : creationTimestamp;
+const firstSeenTimestamp = props.server.labels.first_seen ? new Date(props.server.labels.first_seen.replaceAll('_', ':')) : creationTimestamp;
 </script>
 
 <template>
