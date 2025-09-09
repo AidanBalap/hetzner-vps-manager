@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useServers } from '~/composables/useServers';
+import ServersList from '~/components/partials/ServersList.vue';
+import SnapshotsList from '~/components/partials/SnapshotsList.vue';
+import type { CloudServer, Image } from '~~/types/HetznerCloudApi/CloudServer';
 
-const cfg = useRuntimeConfig();
 const { $toast } = useNuxtApp();
 const { status } = useAuth();
 const isAuthenticated = status.value === 'authenticated';
@@ -13,17 +15,14 @@ if (!isAuthenticated) {
 }
 
 const servers = useServers();
-const snapshots = ref([]);
-const serversList = ref([]);
+const serversList = ref<CloudServer[]>([]);
+const snapshots = ref<Image[]>([]);
 
 // Fetch snapshots on component mount
 onMounted(async () => {
-  useHead({
-    title: `${cfg.public.appName} - Lista de Servidores`,
-  });
-
-  snapshots.value = await servers.fetchSnapshots();
+  updatePageTitle('Servidores');
   serversList.value = await servers.fetchServers();
+  snapshots.value = await servers.fetchSnapshots();
 });
 </script>
 

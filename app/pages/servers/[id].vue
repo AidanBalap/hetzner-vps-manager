@@ -1,111 +1,29 @@
-<script setup>
-const cfg = useRuntimeConfig();
-const { $toast } = useNuxtApp();
+<script setup lang="ts">
+import { useServerActions } from '~/composables/useServerActions';
+import type { CloudServer } from '~~/types/HetznerCloudApi/CloudServer';
+import type { Action } from '~~/types/HetznerCloudApi/Generic';
+
 const { status } = useAuth();
 const isAuthenticated = status.value === 'authenticated';
 
-const server = ref({});
-const actions = ref({});
+const serverActions = useServerActions();
+const server = ref<CloudServer | undefined>();
+const actions = ref([] as Action[]);
 
 const route = useRoute();
-const serverId = route.params.id;
-const baseServerUrl = '/api/servers/' + serverId;
-
-const fetchServer = async () => {
-  const response = await fetch(baseServerUrl);
-
-  if (response.status != 200) {
-    $toast.error('Error al obtener el servidor');
-    return;
-  }
-
-  server.value = await response.json();
-  useHead({
-    title: cfg.public.appName + '- Servidor ' + server.value.name,
-  });
-};
-
-const fetchLastActions = async () => {
-  const response = await fetch(baseServerUrl + '/actions');
-
-  if (response.status != 200) {
-    $toast.error('Error al obtener las acciones');
-    return;
-  }
-
-  actions.value = await response.json();
-};
+const serverId = Number(route.params.id);
 
 const refreshData = async () => {
   console.log('[*] Refreshing data');
-  fetchServer();
-  fetchLastActions();
-};
-
-const powerOn = async () => {
-  $toast.info('Encendiendo servidor');
-
-  const response = await fetch(baseServerUrl + '/start', { method: 'POST' });
-
-  if (response.status != 200) {
-    $toast.error(response.statusText);
-    return;
+  const serverData = await serverActions.fetch(serverId);
+  if (serverData) {
+    server.value = serverData;
   }
-
-  $toast.success('Server is on');
-  refreshData();
-};
-
-const powerOff = async () => {
-  $toast.info('Apagando servidor');
-
-  const response = await fetch(baseServerUrl + '/stop', { method: 'POST' });
-
-  if (response.status != 200) {
-    $toast.error(response.statusText);
-    return;
-  }
-
-  $toast.success('Server is off');
-  refreshData();
-};
-
-const toSnapshot = async () => {
-  $toast.info('Creando snapshot');
-  const response = await fetch(baseServerUrl + '/saveAndDelete');
-
-  if (response.status != 200) {
-    $toast.error(response.statusText);
-    return;
-  }
-
-  $toast.success('Servidor congelado');
-  await navigateTo('/');
-};
-
-const deleteSv = async () => {
-  if (!confirm('¿Estás seguro de que quieres borrar el servidor?')) {
-    return;
-  }
-
-  $toast.info('Borrando servidor');
-
-  const response = await fetch(baseServerUrl + '/delete');
-
-  if (response.status != 200) {
-    $toast.error(response.statusText);
-    return;
-  }
-
-  $toast.success('Servidor eliminado');
-  await navigateTo('/');
+  actions.value = await serverActions.fetchActions(serverId);
+  updatePageTitle('Servidor ' + server.value?.name);
 };
 
 if (isAuthenticated) {
-  useHead({
-    title: cfg.public.appName + '- Servidor ...',
-  });
-
   setTimeout(() => {
     refreshData();
   }, 1000 * 30);
@@ -121,13 +39,13 @@ else {
   <div class="flex flex-col mx-auto m-8 rounded-lg justify-center align-middle">
     <h3 class="text-4xl font-bold pt-4 text-center">
       Servidor
-      <span v-if="server.name">{{ server.name }}</span>
-      <span v-if="!server.name"> ... </span>
+      <span v-if="server">{{ server.name }}</span>
+      <span v-else> ... </span>
       <span>🚀</span>
     </h3>
 
     <div
-      v-if="server.status"
+      v-if="server"
       class="flex flex-col pt-4"
     >
       <div class="flex flex-col gap-y-4 mx-10 border-b-2 pb-4">
@@ -148,7 +66,7 @@ else {
     </div>
 
     <div
-      v-if="server.status"
+      v-if="server"
       class="grid grid-cols-3 grid-rows-1 m-10 gap-x-8"
     >
       <div class="col-span-1 pr-6 border-r-2">
@@ -159,32 +77,35 @@ else {
         <div class="flex flex-col py-4 gap-y-4">
           <button
             class="bg-secondary/80 rounded-lg p-2 hover:scale-105 hover:underline"
-            @click="powerOn()"
+            @click="serverActions.start(serverId); refreshData()"
           >
             Encender
           </button>
           <button
             class="bg-secondary/80 rounded-lg p-2 hover:scale-105 hover:underline"
-            @click="powerOff()"
+            @click="serverActions.stop(serverId); refreshData()"
           >
             Apagar
           </button>
           <button
             class="bg-secondary/80 rounded-lg p-2 hover:scale-105 hover:underline"
-            @click="toSnapshot()"
+            @click="serverActions.snapshotAndDelete(serverId)"
           >
             Congelar 🧊
           </button>
           <button
             class="bg-red-400/80 rounded-lg p-2 hover:scale-105 hover:underline"
-            @click="deleteSv()"
+            @click="serverActions.deleteServer(serverId)"
           >
             Borrar 🚨
           </button>
         </div>
       </div>
 
-      <div class="col-span-2">
+      <div
+        v-if="server"
+        class="col-span-2"
+      >
         <h3 class="text-4xl font-bold pb-4">
           🧾 Ultimas acciones
         </h3>
@@ -195,7 +116,7 @@ else {
       </div>
 
       <div
-        v-if="isLoading"
+        v-if="!server"
         class="flex justify-center align-middle py-40"
       >
         <div role="status">
