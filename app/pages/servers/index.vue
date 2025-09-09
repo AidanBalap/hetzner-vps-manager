@@ -4,15 +4,9 @@ import ServersList from '~/components/partials/ServersList.vue';
 import SnapshotsList from '~/components/partials/SnapshotsList.vue';
 import type { CloudServer, Image } from '~~/types/HetznerCloudApi/CloudServer';
 
-const { $toast } = useNuxtApp();
-const { status } = useAuth();
-const isAuthenticated = status.value === 'authenticated';
-
-// Redirect if not authenticated
-if (!isAuthenticated) {
-  $toast.error('Necesitas estar autentificado');
-  await navigateTo('/');
-}
+definePageMeta({
+  middleware: 'auth',
+});
 
 const servers = useServers();
 const serversList = ref<CloudServer[]>([]);

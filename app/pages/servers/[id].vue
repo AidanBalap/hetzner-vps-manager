@@ -3,8 +3,9 @@ import { useServerActions } from '~/composables/useServerActions';
 import type { CloudServer } from '~~/types/HetznerCloudApi/CloudServer';
 import type { Action } from '~~/types/HetznerCloudApi/Generic';
 
-const { status } = useAuth();
-const isAuthenticated = status.value === 'authenticated';
+definePageMeta({
+  middleware: 'auth',
+});
 
 const serverActions = useServerActions();
 const server = ref<CloudServer | undefined>();
@@ -23,16 +24,11 @@ const refreshData = async () => {
   updatePageTitle('Servidor ' + server.value?.name);
 };
 
-if (isAuthenticated) {
-  setTimeout(() => {
-    refreshData();
-  }, 1000 * 30);
-
+setTimeout(() => {
   refreshData();
-}
-else {
-  await navigateTo('/');
-}
+}, 30_000);
+
+refreshData();
 </script>
 
 <template>
