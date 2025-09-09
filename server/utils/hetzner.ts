@@ -1,19 +1,17 @@
-import type { Action, ApiListResponse, ApiResponse } from '~/types/HetznerCloudApi/Generic';
-import type { CloudServer, Image } from '~/types/HetznerCloudApi/CloudServer';
-import type { CloudServerCreationArguments, ImageCreationArguments } from '~/types/HetznerCloudApi/CloudServerManagement';
-
-const runtimeConfig = useRuntimeConfig();
+import type { Action, ApiListResponse, ApiResponse } from '../../types/HetznerCloudApi/Generic';
+import type { CloudServer, Image } from '../../types/HetznerCloudApi/CloudServer';
+import type { CloudServerCreationArguments, ImageCreationArguments } from '../../types/HetznerCloudApi/CloudServerManagement';
 
 class HetznerClient {
-  apiKey: string;
-  baseUrl: string;
+  private apiKey: string;
+  private baseUrl: string;
 
-  constructor() {
-    this.apiKey = runtimeConfig.hetznerApi;
+  constructor(apiKey: string) {
+    this.apiKey = apiKey;
     this.baseUrl = 'https://api.hetzner.cloud/v1';
   }
 
-  async request(endpoint: string, options: RequestInit = {}) {
+  private async request(endpoint: string, options: RequestInit = {}) {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       headers: {
         'Authorization': `Bearer ${this.apiKey}`,
@@ -95,4 +93,21 @@ class HetznerClient {
   }
 }
 
-export default HetznerClient;
+// Singleton instance
+let hetznerClient: HetznerClient | null = null;
+
+/**
+ * Gets or creates a HetznerClient instance for server-side use
+ */
+export function useHetznerClient(): HetznerClient {
+  if (!hetznerClient) {
+    const config = useRuntimeConfig();
+    if (!config.hetznerApi) {
+      throw new Error('HETZNER_API_KEY is not configured');
+    }
+    hetznerClient = new HetznerClient(config.hetznerApi);
+  }
+  return hetznerClient;
+}
+
+export default useHetznerClient;

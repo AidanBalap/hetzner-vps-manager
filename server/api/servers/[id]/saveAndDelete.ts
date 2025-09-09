@@ -1,9 +1,7 @@
-import HetznerClient from '~/lib/hetznerClient';
-
 export default defineEventHandler(async (event) => {
   const serverId = Number(getRouterParam(event, 'id'));
 
-  const hetzner = new HetznerClient();
+  const hetzner = useHetznerClient();
   const server = (await hetzner.getServer(serverId)).server;
 
   if (!server) {

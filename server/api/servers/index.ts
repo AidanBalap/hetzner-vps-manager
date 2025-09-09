@@ -1,6 +1,4 @@
-import HetznerClient from '~/lib/hetznerClient';
-
-export default defineEventHandler(async (event) => {
-  const hetzner = new HetznerClient();
+export default defineEventHandler(async () => {
+  const hetzner = useHetznerClient();
   return (await hetzner.listServers()).servers;
 });

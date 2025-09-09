@@ -54,7 +54,5 @@ export default defineNuxtConfig({
     config: {
       stylistic: true,
     },
-    emitWarning: true, // Show warnings
-    emitError: true, // Show errors
   },
 });

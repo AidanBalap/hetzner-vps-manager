@@ -1,9 +1,7 @@
-import HetznerClient from '~/lib/hetznerClient';
-
 export default defineEventHandler(async (event) => {
   const id = Number(getRouterParam(event, 'id'));
 
-  const hetzner = new HetznerClient();
+  const hetzner = useHetznerClient();
   const snapshotData = (await hetzner.getSnapshot(id)).image;
 
   const { location, server_type, ...filteredLabels } = snapshotData.labels;
